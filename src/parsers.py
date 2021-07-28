@@ -68,8 +68,8 @@ CAP_MAPPINGS = {
 
 XML_TYPE_XSD_MAPPINGS_OFFICIAL = {
     'ATOM': 'schema/atom.xsd',
-    'CAP1_2': 'schema/CAP-v1.1.xsd',
-    'CAP1_1': 'schema/CAP-v1.2.xsd',
+    'CAP1_2': 'schema/cap12.xsd',
+    'CAP1_1': 'schema/cap11.xsd',
     'EDXL_DE': 'schema/edxl-de.xsd',
     'RSS': 'schema/rss-2_0.xsd',
 }
