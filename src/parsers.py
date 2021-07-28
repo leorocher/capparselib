@@ -66,7 +66,15 @@ CAP_MAPPINGS = {
     'resource': 'resource',  # Leave this as 'parameter', as it get transformed.
 }
 
-XML_TYPE_XSD_MAPPINGS = {
+XML_TYPE_XSD_MAPPINGS_OFFICIAL = {
+    'ATOM': 'schema/atom.xsd',
+    'CAP1_2': 'schema/CAP-v1.1.xsd',
+    'CAP1_1': 'schema/CAP-v1.2.xsd',
+    'EDXL_DE': 'schema/edxl-de.xsd',
+    'RSS': 'schema/rss-2_0.xsd',
+}
+
+XML_TYPE_XSD_MAPPINGS_EXTENDED = {
     'ATOM': 'schema/atom.xsd',
     'CAP1_2': 'schema/cap12_extended.xsd',
     'CAP1_1': 'schema/cap11_extended.xsd',
@@ -76,12 +84,13 @@ XML_TYPE_XSD_MAPPINGS = {
 
 
 class CAPParser(object):
-    def __init__(self, raw_cap_xml=None, recover=False):
+    def __init__(self, raw_cap_xml=None, recover=False, use_extended_xsd=True):
         self.xml = raw_cap_xml.encode('utf-8').strip() if raw_cap_xml is not None else None
         self.recover = recover
         self.objectified_xml = None
         self.cap_xml_type = None
         self.alert_list = []
+        self.use_extended_xsd = use_extended_xsd
         self.load()
 
     def process_area(self, info_dict):
@@ -202,7 +211,11 @@ class CAPParser(object):
         self.xml = bytes(self.xml).replace(b"<references />", b'')
 
     def get_objectified_xml(self):
-        xsd_filename = XML_TYPE_XSD_MAPPINGS[self.cap_xml_type]
+        if self.use_extended_xsd:
+            xsd_filename = XML_TYPE_XSD_MAPPINGS_EXTENDED[self.cap_xml_type]
+        else:
+            xsd_filename = XML_TYPE_XSD_MAPPINGS_OFFICIAL[self.cap_xml_type]
+
         with open(os.path.join(CAPLIBRARY_PATH, xsd_filename)) as f:
             doc = etree.parse(f)
             schema = etree.XMLSchema(doc)
